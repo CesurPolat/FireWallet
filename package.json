@@ -1,10 +1,11 @@
 {
-  "name": "electron-quick-start",
+  "name": "FireWallet",
   "version": "1.0.0",
   "description": "A minimal Electron application",
   "main": "main.js",
   "scripts": {
-    "start": "concurrently \"cd !FireWallet && npm run dev\" \"electron .\""
+    "start": "concurrently \"cd pages && npm run dev\" \"electron .\"",
+    "build": "(cd pages && npm run build) & (cd .. && electron-packager . --ignore=pages)"
   },
   "repository": "https://github.com/electron/electron-quick-start",
   "keywords": [
@@ -17,7 +18,8 @@
   "author": "GitHub",
   "license": "CC0-1.0",
   "devDependencies": {
-    "electron": "^24.1.3"
+    "electron": "^24.1.3",
+    "electron-packager": "^17.1.1"
   },
   "dependencies": {
     "concurrently": "^8.0.1",
