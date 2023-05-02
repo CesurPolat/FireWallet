@@ -8,26 +8,22 @@ const router = createRouter({
     {
       path: '/',
       name: 'Loading',
-      component: LoadingView
+      component: LoadingView//() => import('../views/AboutView.vue')
     },
     {
       path:'/create',
       name:'Create Wallet',
       component:CreateView
     },
-    /* {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue')
-    }, */
     {
       path: "/:catchAll(.*)",
       redirect:'/'
     }
   ]
+})
+
+router.afterEach((to)=>{
+  document.title=to.name;
 })
 
 export default router
