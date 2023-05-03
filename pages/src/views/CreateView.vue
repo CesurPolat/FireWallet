@@ -1,5 +1,5 @@
 <script>
-
+    window.API.ResizeWindow(800,600);
     export default {
         data:function(){
             return{
