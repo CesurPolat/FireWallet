@@ -1,21 +1,24 @@
-const { app, BrowserWindow, Tray, Menu, ipcMain, safeStorage  } = require('electron')
+const { app, BrowserWindow, Tray, Menu, ipcMain } = require('electron')
 const ethers = require("ethers");
+const Store = require('electron-store');
 const path = require('path')
 const url = require('url');
 
+const store = new Store();
+
 let wallet;
-let provider=new ethers.providers.JsonRpcProvider("http://127.0.0.1:8545");
+let provider = new ethers.providers.JsonRpcProvider("http://127.0.0.1:8545");
 
-let ready2Close=false;
+let ready2Close = false;
 
-const logo=path.join(__dirname,"logo.png");
+const logo = path.join(__dirname, "logo.png");
 
-function createWindow () {
-  
+function createWindow() {
+
   const mainWindow = new BrowserWindow({
     width: 357,//800
     height: 600,
-    icon:logo,
+    icon: logo,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js')
     }
@@ -23,31 +26,31 @@ function createWindow () {
 
   tray = Tray(logo)
   tray.setToolTip("FireWallet")
-  tray.on('click',()=>{
+  tray.on('click', () => {
     mainWindow.show();
   })
-  var contextMenu=Menu.buildFromTemplate([
-    {label:"Quit",type:'normal',click:()=>{ready2Close=true; app.quit()}}
+  var contextMenu = Menu.buildFromTemplate([
+    { label: "Quit", type: 'normal', click: () => { ready2Close = true; app.quit() } }
   ])
   tray.setContextMenu(contextMenu)
-  
-  mainWindow.setMenuBarVisibility(false)
-  mainWindow.on('close',(e)=>{if(!ready2Close){e.preventDefault();} mainWindow.hide()})
 
-  ipcMain.on("resize-window",(e,width,height)=>{
-    mainWindow.setSize(width,height,true);
+  mainWindow.setMenuBarVisibility(false)
+  mainWindow.on('close', (e) => { if (!ready2Close) { e.preventDefault(); } mainWindow.hide() })
+
+  ipcMain.on("resize-window", (e, width, height) => {
+    mainWindow.setSize(width, height, true);
   })
 
-  if(app.isPackaged){
-    mainWindow.loadURL(url.format({      
+  if (app.isPackaged) {
+    mainWindow.loadURL(url.format({
       pathname: path.join(
         __dirname,
-        'dist/index.html'),       
-      protocol: 'file:',      
-      slashes: true     
+        'dist/index.html'),
+      protocol: 'file:',
+      slashes: true
     }))
 
-  }else{
+  } else {
     mainWindow.loadURL("http://localhost:5173/")
   }
 
@@ -59,15 +62,15 @@ app.whenReady().then(() => {
 
 
 
-  ipcMain.on("CreateAccount",(e,password)=>{
-    const wallet = Wallet.createRandom(provider);
-    //console.log('mnemonic:', wallet.mnemonic?.phrase)
-    wallet.encrypt(password).then((data) => {
-      localStorage['wallet'] = data;
+  ipcMain.on("CreateAccount", (e, password) => {
+    const Wallet = ethers.Wallet.createRandom(provider);
+    wallet=Wallet;
+    Wallet.encrypt(password).then((data) => {
+      store.set('wallet', data);
     })
+    e.returnValue=Wallet.mnemonic?.phrase;
   })
 
-  //console.log(BrowserWindow.getAllWindows().length);
   app.on('activate', function () {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
   })
