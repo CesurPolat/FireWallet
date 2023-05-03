@@ -1,5 +1,4 @@
 <script>
-window.API.ResizeWindow(800, 600);
 export default {
     data: function () {
         return {
@@ -8,6 +7,10 @@ export default {
             confirmPass: '',
             phrases: '',
         };
+    },
+    mounted: function () {
+        window.API.ResizeWindow(800, 600);
+
     },
     methods: {
         createAccount: function () {
@@ -78,5 +81,6 @@ export default {
                 <p>11<input type="text" class="border w-32"></p>
                 <p>12<input type="text" class="border w-32"></p>
             </div>
+        </div>
     </div>
-</div></template>
+</template>

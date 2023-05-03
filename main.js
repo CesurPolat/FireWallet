@@ -64,11 +64,25 @@ app.whenReady().then(() => {
 
   ipcMain.on("CreateAccount", (e, password) => {
     const Wallet = ethers.Wallet.createRandom(provider);
-    wallet=Wallet;
+    wallet = Wallet;
     Wallet.encrypt(password).then((data) => {
       store.set('wallet', data);
     })
-    e.returnValue=Wallet.mnemonic?.phrase;
+    e.returnValue = Wallet.mnemonic?.phrase;
+  })
+
+  ipcMain.on("Unlock", async (e, password) => {
+    try {
+      const Wallet = await ethers.Wallet.fromEncryptedJson(store.get("wallet"), password);
+      this.wallet = Wallet.connect(provider);
+      e.returnValue=true;
+    } catch {
+      e.returnValue=false;
+    }
+  })
+
+  ipcMain.on("StoreHas",(e,key)=>{
+    e.returnValue=store.has(key);
   })
 
   app.on('activate', function () {

@@ -3,10 +3,10 @@
 export default {
     mounted: function () {
         setTimeout(() => {
-            if (localStorage["wallet"] == undefined) {
-                this.$router.push("create")
+            if (window.API.StoreHas("wallet")) {
+                this.$router.push("unlock")
             } else {
-                this.$router.push("login")
+                this.$router.push("create")
             }
         }, 1000);
     }
