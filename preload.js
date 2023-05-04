@@ -1,8 +1,12 @@
 const { contextBridge, ipcRenderer } = require('electron')
 
 contextBridge.exposeInMainWorld('API', {
-    ResizeWindow: (width,height) => ipcRenderer.send('resize-window',width,height),
-    CreateAccount: (password)=>  ipcRenderer.sendSync("CreateAccount",password),
-    Unlock: (password)=>  ipcRenderer.sendSync("Unlock",password),
-    StoreHas: (key)=> ipcRenderer.sendSync("StoreHas",key),
+    ResizeWindow: (width, height) => ipcRenderer.send('resize-window', width, height),
+    CreateAccount: (password) => ipcRenderer.sendSync("CreateAccount", password),
+    ImportAccount: (phrase, password) => ipcRenderer.sendSync("ImportAccount",phrase, password),
+    Unlock: (password) => ipcRenderer.sendSync("Unlock", password),
+    GetBalance: () => ipcRenderer.sendSync("GetBalance"),
+    SendTransaction: () => ipcRenderer.send("SendTransaction"),
+    StoreHas: (key) => ipcRenderer.sendSync("StoreHas", key),
+    ClearData: () => ipcRenderer.send("ClearData"),
 })

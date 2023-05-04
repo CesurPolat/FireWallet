@@ -3,6 +3,7 @@ export default {
     data: function () {
         return {
             show: 'create',
+            action:true,
             pass: '',
             confirmPass: '',
             phrases: '',
@@ -17,6 +18,12 @@ export default {
             if (this.pass == this.confirmPass) {
                 this.phrases = window.API.CreateAccount(this.pass);
                 this.show = "phrase";
+            }
+        },
+        importAccount: async function () {
+            if (this.pass == this.confirmPass) {
+                window.API.ImportAccount(this.phrases, this.pass)
+                this.goHome();
             }
         },
         goHome: function () {
@@ -35,11 +42,11 @@ export default {
             <h1 class="font-bold">New to FIREWALLET?</h1><br>
             <div class="flex">
                 <div class="border-gray-300 border rounded m-2">
-                    <button class="bg-red-500 text-white w-32 m-5 p-2 rounded-full" @click="show = 'password'">Create a
+                    <button class="bg-red-500 text-white w-32 m-5 p-2 rounded-full" @click="show = 'password';action=true">Create a
                         Wallet</button>
                 </div>
                 <div class="border-gray-300 border rounded m-2">
-                    <button class="bg-red-500 text-white w-32 m-5 p-2 rounded-full" @click="show = 'import'">Import
+                    <button class="bg-red-500 text-white w-32 m-5 p-2 rounded-full" @click="show = 'password'; action=false">Import
                         Wallet</button>
                 </div>
             </div>
@@ -53,7 +60,7 @@ export default {
             <h1>Repassword</h1>
             <input type="password" v-model="confirmPass"
                 class="border rounded-full p-2 pl-5 pr-5 w-64 focus:border-red-500 outline-none transition-all">
-            <button class="bg-red-500 text-white w-64 m-5 p-2 rounded-full" @click="createAccount()">Create
+            <button class="bg-red-500 text-white w-64 m-5 p-2 rounded-full" @click="action ? createAccount():show='import'">Create
                 Password</button>
         </div>
 
@@ -67,7 +74,11 @@ export default {
 
         <div class="flex flex-col items-center" v-show="show == 'import'">
             <a @click="show = 'create'" class="text-left w-64">← Back</a>
-            <div class="flex flex-wrap w-96">
+            <input type="password" v-model="phrases"
+                class="border rounded-full p-2 pl-5 pr-5 w-64 focus:border-red-500 outline-none transition-all">
+            <button class="bg-red-500 text-white w-64 m-5 p-2 rounded-full" @click="importAccount()">Continue</button>
+
+            <!-- <div class="flex flex-wrap w-96">
                 <p>1<input type="text" class="border w-32"></p>
                 <p>2<input type="text" class="border w-32"></p>
                 <p>3<input type="text" class="border w-32"></p>
@@ -80,7 +91,7 @@ export default {
                 <p>10<input type="text" class="border w-32"></p>
                 <p>11<input type="text" class="border w-32"></p>
                 <p>12<input type="text" class="border w-32"></p>
-            </div>
+            </div> -->
         </div>
     </div>
 </template>

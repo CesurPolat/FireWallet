@@ -12,6 +12,7 @@ export default{
                 this.$router.push("home");
             }else{
                 //TODO: Validation
+                alert("Wrong Password")
             }
         }
     }
