@@ -3,6 +3,7 @@ import LoadingView from '../views/LoadingView.vue';
 import CreateView from '../views/CreateView.vue';
 import HomeView from '../views/HomeView.vue';
 import UnlockView from '../views/UnlockView.vue';
+import NotificationView from '../views/NotificationView.vue';
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -21,6 +22,11 @@ const router = createRouter({
       path:'/unlock',
       name:'Unlock',
       component:UnlockView
+    },
+    {
+      path:'/notification',
+      name:'Notification',
+      component:NotificationView
     },
     {
       path:'/create',

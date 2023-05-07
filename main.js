@@ -10,11 +10,12 @@ let wallet;
 let provider = new ethers.providers.JsonRpcProvider("http://127.0.0.1:8545");
 
 let ready2Close = false;
-let window = null;
+let mWindow = null;
 const gotTheLock = app.requestSingleInstanceLock()
 const logo = path.join(__dirname, "logo.png");
+const location = app.isPackaged ? url.format({ pathname: path.join(__dirname, 'dist/index.html'), protocol: 'file:', slashes: true }) : "http://localhost:5173/";
 
-function createWindow() {
+function createWindow(Local, isTray = true) {
 
   const mainWindow = new BrowserWindow({
     width: 357,//800
@@ -25,35 +26,28 @@ function createWindow() {
     }
   })
 
-  tray = Tray(logo)
-  tray.setToolTip("FireWallet")
-  tray.on('click', () => {
-    mainWindow.show();
-  })
-  var contextMenu = Menu.buildFromTemplate([
-    { label: "Quit", type: 'normal', click: () => { ready2Close = true; app.quit() } }
-  ])
-  tray.setContextMenu(contextMenu)
+  if (isTray) {
+    tray = Tray(logo)
+    tray.setToolTip("FireWallet")
+    tray.on('click', () => {
+      mainWindow.show();
+    })
+    var contextMenu = Menu.buildFromTemplate([
+      { label: "Quit", type: 'normal', click: () => { ready2Close = true; app.quit() } }
+    ])
+    tray.setContextMenu(contextMenu)
+
+    mainWindow.on('close', (e) => { if (!ready2Close) { e.preventDefault(); } mainWindow.hide() })
+  }
 
   mainWindow.setMenuBarVisibility(false)
-  mainWindow.on('close', (e) => { if (!ready2Close) { e.preventDefault(); } mainWindow.hide() })
 
   ipcMain.on("resize-window", (e, width, height) => {
     mainWindow.setSize(width, height, true);
   })
 
-  if (app.isPackaged) {
-    mainWindow.loadURL(url.format({
-      pathname: path.join(
-        __dirname,
-        'dist/index.html'),
-      protocol: 'file:',
-      slashes: true
-    }))
+  mainWindow.loadURL(Local)
 
-  } else {
-    mainWindow.loadURL("http://localhost:5173/")
-  }
 
   return mainWindow;
 
@@ -63,16 +57,22 @@ function createWindow() {
 if (!gotTheLock) {
   app.quit()
 } else {
-  app.on('second-instance', (event, commandLine) => {
+  app.on('second-instance', (event, commandLine, workingPath, additionalData) => {
 
-    if (window) {
-      if (window.isMinimized()) window.restore()
-      window.focus()
+    let obj = {};
+    commandLine.filter(x => x.includes("=")).map(x => Object.assign(obj, { [x.split("=")[0].slice(2)]: x.split("=")[1] }));
+    
+    if (Object.keys(obj).length) {
+      notificationWindow = createWindow(location + "#/notification?" + new URLSearchParams(obj).toString(), false)
+      focusWindow(notificationWindow)
+    } else {
+      focusWindow(mWindow)
     }
+
   })
 
   app.whenReady().then(() => {
-    window = createWindow()
+    mWindow = createWindow(location)
 
     ipcMain.on("CreateAccount", (e, password) => {
       const Wallet = ethers.Wallet.createRandom(provider);
@@ -106,7 +106,7 @@ if (!gotTheLock) {
     })
 
     ipcMain.on("SendTransaction", async (e) => {
-      console.log(wallet.sendTransaction({ to: "0x70997970C51812dc3A010C7d01b50e0d17dc79C8" }));
+      console.log(wallet.sendTransaction());
     })
 
     /* {to?: string, from?: string, nonce?: BigNumberish,
@@ -138,3 +138,10 @@ if (!gotTheLock) {
 app.on('window-all-closed', function () {
   if (process.platform !== 'darwin') app.quit()
 })
+
+function focusWindow(window) {
+  if (window) {
+    if (window.isMinimized()) window.restore()
+    window.focus()
+  }
+}
