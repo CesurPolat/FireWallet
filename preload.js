@@ -6,7 +6,7 @@ contextBridge.exposeInMainWorld('API', {
     ImportAccount: (phrase, password) => ipcRenderer.sendSync("ImportAccount",phrase, password),
     Unlock: (password) => ipcRenderer.sendSync("Unlock", password),
     GetBalance: () => ipcRenderer.sendSync("GetBalance"),
-    SendTransaction: () => ipcRenderer.send("SendTransaction"),
+    SendTransaction: (obj) => ipcRenderer.send("SendTransaction", obj),
     StoreHas: (key) => ipcRenderer.sendSync("StoreHas", key),
     ClearData: () => ipcRenderer.send("ClearData"),
 })

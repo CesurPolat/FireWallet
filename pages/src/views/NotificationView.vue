@@ -1,11 +1,23 @@
 <script>
     export default{
+        data() {
+            return{
+                obj:{}
+            }
+        },
+        methods:{
+            SendTransaction:function(obj){
+                window.API.SendTransaction(obj)
+                window.close()
+            }
+        },
         mounted:function(){
-            console.log(this.$route.query);
+            this.obj=this.$route.query;
         }
     }
 </script>
 
 <template>
-    a
+    {{ this.$route.query.to }}
+    <button @click="SendTransaction(this.$route.query)">aaa</button>
 </template>
