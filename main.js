@@ -8,6 +8,12 @@ const server = express()
 server.use(express.json())
 const store = new Store()
 
+// []
+if(!store.has("networks")){
+  store.set("networks",["http://127.0.0.1:8545"])
+  store.set("selectedNetwork",0)
+}
+
 global.share = { ipcMain }
 global.store = { store }
 
@@ -110,6 +116,10 @@ if (!gotTheLock) {
 
 app.on('window-all-closed', function () {
   if (process.platform !== 'darwin') app.quit()
+})
+
+app.setLoginItemSettings({
+  openAtLogin: true    
 })
 
 function focusWindow(window) {

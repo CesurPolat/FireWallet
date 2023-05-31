@@ -1,10 +1,15 @@
 const ethers = require("ethers");
 const axios = require('axios');
 
-let wallet;
-let provider = new ethers.providers.JsonRpcProvider("http://127.0.0.1:8545");
 const ipcMain=global.share.ipcMain;
 const store=global.store.store;
+
+let networks=[...store.get("networks")];
+let selectedNetwork = store.get("selectedNetwork");
+
+let wallet;
+let provider = new ethers.providers.JsonRpcProvider(networks[selectedNetwork]);
+
 
 ipcMain.on("CreateAccount", (e, password) => {
     const Wallet = ethers.Wallet.createRandom(provider);
@@ -33,6 +38,10 @@ ipcMain.on("Unlock", async (e, password) => {
     }
 })
 
+ipcMain.on("Lock",(e) => {
+    wallet=null
+})
+
 ipcMain.on("GetBalance", async (e) => {
     e.returnValue = await wallet.getBalance();
 })
@@ -55,3 +64,28 @@ ipcMain.on("SendTransaction", async (e, obj) => {
       maxPriorityFeePerGas?: BigNumberish; maxFeePerGas?: BigNumberish;
   
       customData?: Record<string, any>; ccipReadEnabled?: boolean;} */
+
+
+ipcMain.on("getNetworks",async (e)=>{
+    e.returnValue = networks
+})
+
+ipcMain.on("getSelectedNetwork",async (e)=>{
+    e.returnValue = selectedNetwork
+})
+
+// !!!
+ipcMain.on("setNetworks", (e,networkId, Networks)=>{
+    if(networkId!=undefined){
+        selectedNetwork=networkId
+        store.set("selectedNetwork",networkId)
+    }
+
+    if(Networks!=undefined){
+        networks=Networks
+        store.set("networks",Networks)
+    }
+
+    provider = new ethers.providers.JsonRpcProvider(networks[networkId]);
+
+})
