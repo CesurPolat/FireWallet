@@ -42,6 +42,10 @@ ipcMain.on("Lock",(e) => {
     wallet=null
 })
 
+ipcMain.on("GetAddress", async (e)=>{
+    e.returnValue = wallet.address
+})
+
 ipcMain.on("GetBalance", async (e) => {
     e.returnValue = await wallet.getBalance();
 })
@@ -88,4 +92,10 @@ ipcMain.on("setNetworks", (e,networkId, Networks)=>{
 
     provider = new ethers.providers.JsonRpcProvider(networks[networkId]);
 
+})
+
+ipcMain.on("eth2Currency",async (e)=>{
+    axios.get("https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms="+store.get("currency")).then((resp)=>{
+        e.returnValue = resp.data[store.get("currency")];
+    })
 })

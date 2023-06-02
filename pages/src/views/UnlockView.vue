@@ -34,6 +34,7 @@ export default {
         <h1>Unlock Wallet</h1>
         <input type="password" v-model="pass"
             class="border rounded-full p-2 pl-5 pr-5 w-64 focus:border-red-500 outline-none transition-all">
+            <!-- TODO: Loading Circle -->
         <button class="bg-red-500 text-white w-64 m-5 p-2 rounded-full" @click="unlock()">Unlock</button>
         <router-link to="create" class="font-medium text-red-600 underline dark:text-red-500 hover:no-underline" @click="">Forgot Password?</router-link>
     </div>

@@ -11,6 +11,7 @@ contextBridge.exposeInMainWorld('API', {
     ImportAccount: (phrase, password) => ipcRenderer.sendSync("ImportAccount", phrase, password),
     Unlock: (password) => ipcRenderer.sendSync("Unlock", password),
     Lock: () => ipcRenderer.send("Lock"),
+    GetAddress: ()=> ipcRenderer.sendSync("GetAddress"),
     GetBalance: () => ipcRenderer.sendSync("GetBalance"),
     SendTransaction: (obj) => ipcRenderer.send("SendTransaction", obj),
     StoreHas: (key) => ipcRenderer.sendSync("StoreHas", key),
@@ -18,4 +19,6 @@ contextBridge.exposeInMainWorld('API', {
     GetNetworks: ()=>ipcRenderer.sendSync("getNetworks"),
     GetSelectedNetwork: ()=>ipcRenderer.sendSync("getSelectedNetwork"),
     SetNetworks:(networkId, networks)=>ipcRenderer.send("setNetworks",networkId, networks),
+    Eth2Currency:()=>ipcRenderer.sendSync("eth2Currency"),
+    jdenticon:(value)=>ipcRenderer.sendSync("jdenticon", value),
 })

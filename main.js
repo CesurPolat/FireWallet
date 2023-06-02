@@ -3,16 +3,13 @@ const Store = require('electron-store');
 const path = require('path')
 const url = require('url');
 const express = require('express')
+const jdenticon = require("jdenticon");
 
 const server = express()
 server.use(express.json())
 const store = new Store()
 
-// []
-if(!store.has("networks")){
-  store.set("networks",["http://127.0.0.1:8545"])
-  store.set("selectedNetwork",0)
-}
+reset()
 
 global.share = { ipcMain }
 global.store = { store }
@@ -98,12 +95,17 @@ if (!gotTheLock) {
   app.whenReady().then(() => {
     mWindow = createWindow(location)
 
+    ipcMain.on("jdenticon", async (e, value) => {
+      e.returnValue = jdenticon.toSvg(value, 50);
+    })
+
     ipcMain.on("StoreHas", (e, key) => {
       e.returnValue = store.has(key);
     })
 
     ipcMain.on("ClearData", () => {
       store.clear();
+      reset()
     })
 
 
@@ -119,13 +121,25 @@ app.on('window-all-closed', function () {
 })
 
 app.setLoginItemSettings({
-  openAtLogin: true    
+  openAtLogin: true
 })
 
 function focusWindow(window) {
   if (window) {
     if (window.isMinimized()) window.restore()
     window.focus()
+  }
+}
+
+function reset() {
+  // []
+  if (!store.has("networks")) {
+    store.set("networks", ["http://127.0.0.1:8545"])
+    store.set("selectedNetwork", 0)
+  }
+
+  if (!store.has("currency")) {
+    store.set("currency", "USD")
   }
 }
 
