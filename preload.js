@@ -1,24 +1,17 @@
-const { contextBridge, ipcRenderer } = require('electron')
+/**
+ * The preload script runs before. It has access to web APIs
+ * as well as Electron's renderer process modules and some
+ * polyfilled Node.js functions.
+ *
+ * https://www.electronjs.org/docs/latest/tutorial/sandbox
+ */
+window.addEventListener('DOMContentLoaded', () => {
+  const replaceText = (selector, text) => {
+    const element = document.getElementById(selector)
+    if (element) element.innerText = text
+  }
 
-window.addEventListener("mouseup", (e) => {
-    if (e.button === 3 || e.button === 4)
-        e.preventDefault();
-});
-
-contextBridge.exposeInMainWorld('API', {
-    ResizeWindow: (width, height) => ipcRenderer.send('resize-window', width, height),
-    CreateAccount: (password) => ipcRenderer.sendSync("CreateAccount", password),
-    ImportAccount: (phrase, password) => ipcRenderer.sendSync("ImportAccount", phrase, password),
-    Unlock: (password) => ipcRenderer.sendSync("Unlock", password),
-    Lock: () => ipcRenderer.send("Lock"),
-    GetAddress: ()=> ipcRenderer.sendSync("GetAddress"),
-    GetBalance: () => ipcRenderer.sendSync("GetBalance"),
-    SendTransaction: (obj) => ipcRenderer.send("SendTransaction", obj),
-    StoreHas: (key) => ipcRenderer.sendSync("StoreHas", key),
-    ClearData: () => ipcRenderer.send("ClearData"),
-    GetNetworks: ()=>ipcRenderer.sendSync("getNetworks"),
-    GetSelectedNetwork: ()=>ipcRenderer.sendSync("getSelectedNetwork"),
-    SetNetworks:(networkId, networks)=>ipcRenderer.send("setNetworks",networkId, networks),
-    Eth2Currency:()=>ipcRenderer.sendSync("eth2Currency"),
-    jdenticon:(value)=>ipcRenderer.sendSync("jdenticon", value),
+  for (const type of ['chrome', 'node', 'electron']) {
+    replaceText(`${type}-version`, process.versions[type])
+  }
 })
