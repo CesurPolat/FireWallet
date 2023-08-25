@@ -23,6 +23,7 @@
     "electron-builder": "^24.6.3"
   },
   "dependencies": {
+    "ant-design-vue": "^4.0.1",
     "axios": "^1.4.0",
     "concurrently": "^8.2.1",
     "electron-store": "^8.1.0",

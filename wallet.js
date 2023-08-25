@@ -44,7 +44,7 @@ ipcMain.on("Unlock", async (e, password) => {
         for (let x = 0; x < store.get("wallet").length; x++) {
             const Wallet = await ethers.Wallet.fromEncryptedJsonSync(store.get("wallet")[x], password);
             wallet.push(Wallet.connect(provider));
-            for (let i = 0; i < store.get("accountCreated")[x]-1; i++) {
+            for (let i = 1; i < store.get("accountCreated")[x]; i++) {
                 const tempWallet = ethers.Wallet.fromMnemonic(Wallet.mnemonic.phrase, "m/44'/60'/" + i + "'/0/0")
                 wallet.push(tempWallet.connect(provider));
             }

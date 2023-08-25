@@ -1,13 +1,18 @@
 //import './assets/main.css'
 import './assets/style.css'
+import 'ant-design-vue/dist/reset.css';
 
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 import { ethers } from 'ethers'
+import { Modal,Button, Input } from 'ant-design-vue';
 
 const app = createApp(App)
 
+app.use(Button);
+app.use(Modal);
+app.use(Input)
 app.use(router)
 app.mixin({
     mounted: function () {

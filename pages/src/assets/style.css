@@ -1,3 +1,17 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.modal .ant-modal-footer .ant-btn-primary {
+    background-color: #1677ff;
+}
+
+.modal .ant-modal-body input:focus  {
+    border-color: rgb(239 68 68);
+    box-shadow: 0 0 0 2px rgba(255, 68, 68, 0.3);
+}
+
+.modal .ant-modal-body input:hover  {
+    border-color: rgb(239 68 68);
+    box-shadow: 0 0 0 2px rgba(255, 68, 68, 0.3);
+}

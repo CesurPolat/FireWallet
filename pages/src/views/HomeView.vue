@@ -1,6 +1,10 @@
 <script>
 import { ethers } from 'ethers';
 import NetworksView from './NetworksView.vue';
+const et=ethers;
+
+
+
 
 export default {
     data: function () {
@@ -9,8 +13,11 @@ export default {
             profile: false,
             sendAddress: "",
             currency: 0,
-            accounts:[],
-            balance:0
+            accounts: [],
+            balance: 0,
+            open: false,
+            privateKey:"",
+            pass:"",
 
         }
     },
@@ -18,6 +25,9 @@ export default {
         //TODO: GLOB
         isAdress: function (address) {
             return ethers.isAddress(address)
+        },
+        isPrivate:function(key){
+            return et.isHexString(key,32);
         },
         goSend: function (e) {
             if (this.isAdress(e.target.value)) {
@@ -33,23 +43,29 @@ export default {
             window.API.ClearData();
             this.$router.push("create");
         },
-        createAccount: function(){
+        createAccount: function () {
             window.API.incAccount();
         },
-        
+        importWallet: function(key,pass){
+            if(!this.isPrivate(key)){return null}
+            if(window.API.Unlock(pass)){
+                window.API.importWallet(key,pass)
+            }
+        },
+
     },
     filters: {
 
     },
-    computed: function(){
+    computed: function () {
 
     },
     mounted: async function () {
         this.currency = this.getEth2Currency()
-        this.accounts=this.getAccounts()
+        this.accounts = this.getAccounts()
         //TODO:Balance Eth
-        this.balance=this.wei2Eth(parseInt((await this.getBalance(this.getAccount()))["_hex"],16));
-        
+        this.balance = this.wei2Eth(parseInt((await this.getBalance(this.getAccount()))["_hex"], 16));
+
         setInterval(() => {
             this.currency = this.getEth2Currency()
         }, 10000);
@@ -69,7 +85,7 @@ export default {
             <NetworksView></NetworksView>
             <div class="ml-2">
                 <div v-html="getJdenticon(getAccount())" class="cursor-pointer" @click="profile = !profile"></div>
-                <div class="absolute right-1 bg-gray-800 bg-opacity-25 text-white rounded-sm divide-y-2 divide-gray-100 [&>*]:m-1 w-40 z-20 overflow-hidden"
+                <div class="absolute right-1 bg-gray-800 bg-opacity-40 text-white rounded-sm divide-y-2 divide-gray-100 [&>*]:m-1 w-40 z-20 overflow-hidden"
                     v-show="profile">
                     <div class="flex items-center justify-between">
                         <h1>Account</h1>
@@ -78,10 +94,20 @@ export default {
                     </div>
                     <div>
                         <!-- TODO: Overflow text -->
-                        <div @click="" class="flex items-center" v-for="account in getAccounts()"><div v-html="getJdenticon(account,30)" class="cursor-pointer" @click="profile = !profile"></div>{{account}}</div>
+                        <div @click="" class="flex items-center" v-for="account, idx in getAccounts()">
+                            <div v-html="getJdenticon(account, 30)" class="cursor-pointer"
+                                @click="localStorage.selectedAccout = idx"></div>{{ account }}
+                        </div>
                     </div>
                     <div>
                         <button @click="createAccount()">Create Account</button>
+                    </div>
+                    <div>
+                        <button @click="open=!open">Import Wallet</button>
+                        <a-modal v-model:open="open" title="Import Wallet" class="modal" @ok="importWallet(privateKey,pass);privateKey='';pass=''" @cancel="privateKey='';pass=''">
+                            <a-input v-model:value="privateKey" class="mb-2" placeholder="Private Key" />
+                            <a-input v-model:value="pass" type="password" class="mb-2" placeholder="Password" />
+                        </a-modal>
                     </div>
                     <div>
                         <button @click="clearData()">Clear Data</button>
@@ -126,7 +152,8 @@ export default {
 
             </div>
 
-            <router-link to="notification" class="font-medium text-red-600 underline dark:text-red-500 hover:no-underline">notification</router-link>
+            <router-link to="notification"
+                class="font-medium text-red-600 underline dark:text-red-500 hover:no-underline">notification</router-link>
         </div>
 
         <div v-show="pageShow == 'contacts'">
