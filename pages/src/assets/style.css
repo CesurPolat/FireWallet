@@ -15,3 +15,12 @@
     border-color: rgb(239 68 68);
     box-shadow: 0 0 0 2px rgba(255, 68, 68, 0.3);
 }
+
+.modal .ant-modal-footer .ant-btn-primary  {
+    background-color: rgb(239 68 68);;
+}
+
+.modal .ant-modal-footer .ant-btn-default:hover   {
+    border-color: rgb(239 68 68);
+    color:rgb(239 68 68)
+}

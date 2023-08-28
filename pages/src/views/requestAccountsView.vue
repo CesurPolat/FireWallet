@@ -10,6 +10,7 @@ export default {
     },
     methods: {
         Reject:()=>{
+            window.API.WsSend("Rejected");
             window.close()
         },
         Confirm:(address)=>{

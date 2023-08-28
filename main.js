@@ -60,22 +60,27 @@ let params = process.argv.pop().split("firewallet://")[1];
 
 if (!gotTheLock) {
   if (!params) {
+    console.log("Quit");
     app.quit()
   } else {
     console.log("Notification");
 
   }
 } else {
-  app.on('second-instance', (event, commandLine, workingPath, additionalData) => {
+  app.on('second-instance', async (event, commandLine, workingPath, additionalData) => {
 
     params = commandLine.pop().split("firewallet://")[1];
+
+    
 
     //let objTemp = {};
     //commandLine.filter(x => x.includes("=")).map(x => Object.assign(objTemp, { [x.split("=")[0].slice(2)]: x.split("=")[1] }));
 
     if (params) {
-      notificationWindow = createWindow(location + "#/notification?" + new URLSearchParams(params).toString(), false)
-      focusWindow(notificationWindow)
+      /* notificationWindow = createWindow(location + "#/notification?" + new URLSearchParams(params).toString(), false)
+      focusWindow(notificationWindow) */
+     
+
     } else {
       focusWindow(mWindow)
     }
@@ -87,6 +92,8 @@ if (!gotTheLock) {
 
     ws.on('message', async function message(data) {
       _data = JSON.parse(data)
+
+      //TODO: Remove
       const accs = await _wallet.getAccounts();
       //TODO: Locked Account After Unlock Continue
       if (accs.length == 0) { focusWindow(mWindow); return null; }

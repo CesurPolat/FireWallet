@@ -5,7 +5,12 @@ export default {
             obj: {},
             type: "Market",
             networks: [],
-            selectedNetwork: 0
+            selectedNetwork: 0,
+            balance: 0,
+            open: false,
+            gasPrice: 0,
+            maxGas: 0,
+
         }
     },
     methods: {
@@ -21,19 +26,35 @@ export default {
             //TODO: Func
             this.obj.value = e.target.value * 1000000000000000000
         },
+        changeGas: function (e, type) {
+            //TODO: Func
+            this.obj[type] = { _hex: "0x" + (e.target.value * 1000000000000000000).toString(16) }
+            this.gasPrice = this.obj.gasPrice;
+            this.maxGas = this.obj.maxFeePerGas;
+            console.log(this.obj);
+
+
+        },
+
     },
-    mounted: function () {
+    mounted: async function () {
         this.obj = this.$route.query;
         this.obj = { from: "0x70997970C51812dc3A010C7d01b50e0d17dc79C8", to: "0x70997970C51812dc3A010C7d01b50e0d17dc79C8", value: 10000 }
         if (this.obj.gasPrice == undefined) {
-            this.obj = { ...this.obj, ...window.API.GetFee() };
+            this.obj = { ...this.obj, ...await this.getFee() };
         } else {
             this.type = "Özel"
         }
+        this.gasPrice = this.obj.gasPrice;
+        this.maxGas = this.obj.maxFeePerGas;
 
-        //TODO: modular
-        this.networks = window.API.GetNetworks();
-        this.selectedNetwork = window.API.GetSelectedNetwork();
+        console.log(this.obj);
+
+        //TODO: ?
+        this.balance = this.wei2Eth(parseInt((await this.getBalance(this.obj.from))["_hex"], 16));
+
+        this.networks = JSON.parse(localStorage.networks);
+        this.selectedNetwork = localStorage.selectedNetwork;
 
 
 
@@ -49,7 +70,7 @@ export default {
             <div>
                 <div class="flex justify-between p-2 divide-x-2 [&>div]:w-[50vw] [&>div]:justify-center">
                     <div class="flex items-center">
-                        <div v-html="getJdenticon(obj.to, 30)" class="cursor-pointer"></div>
+                        <div v-html="getJdenticon(obj.from, 30)" class="cursor-pointer"></div>
                         <h2>{{ obj.from?.slice(0, 5) }}...{{ obj.from?.slice(-4) }}</h2>
                     </div>
 
@@ -67,7 +88,7 @@ export default {
                 <div class="flex">
                     <div class="w-14">Balance:</div> <img src="@/assets/ethereum-eth-logo.svg" alt="ETH"
                         class="w-3 ml-2 mr-2">
-                    {{ getBalance() }}
+                    {{ balance }}
                 </div>
                 <div class="border rounded-full p-1">
                     {{ networks[selectedNetwork] }}
@@ -82,11 +103,20 @@ export default {
             <div class="flex p-2 justify-between items-center">
                 <div class="flex">
                     <div class="w-20">Gas Price:</div>{{ wei2Eth(parseInt(this.obj.gasPrice?._hex,
-                    16)).toFixed(16).replace(/\.?0+$/,
-                        "") }}
+                        16)).toFixed(16).replace(/\.?0+$/,
+                            "") }}
                 </div>
                 <div>
-                    <button class=" text-red-500 hover:underline">{{ type }} ></button>
+                    <button class=" text-red-500 hover:underline" @click="open = !open">{{ type }} ></button>
+                    <a-modal v-model:open="open" title="Import Wallet" class="modal" @ok="open = !open"
+                        @cancel="obj.gasPrice = { _hex: gasPrice }; obj.maxFeePerGas = { _hex: maxGas }"><!-- TODO: ???? Cancel Big Problem -->
+                        <a-input :value='wei2Eth(obj.maxFeePerGas._hex).toFixed(16).replace(/\.?0+$/, "")'
+                            @change="(event) => changeGas(event, 'maxFeePerGas')" type="number" class="mb-2"
+                            placeholder="Gas Limit" />
+                        <a-input :value='wei2Eth(obj.gasPrice._hex).toFixed(16).replace(/\.?0+$/, "")'
+                            @change="(event) => changeGas(event, 'gasPrice')" type="number" class="mb-2"
+                            placeholder="Gas Price" />
+                    </a-modal>
                 </div>
             </div>
             <div class="flex p-2">
@@ -100,7 +130,7 @@ export default {
                 class="border border-red-500 text-red-500 rounded-full w-[40vw]">Reject</button>
             <button @click="SendTransaction(this.$route.query)"
                 class="bg-red-500 text-white rounded-full w-[40vw] hover:opacity-90 disabled:bg-red-800"
-                :disabled="wei2Eth(obj.value) > getBalance()">Confirm</button>
+                :disabled="wei2Eth(obj.value) > balance">Confirm</button>
         </div>
 
     </div>

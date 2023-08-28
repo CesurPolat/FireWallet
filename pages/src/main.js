@@ -1,6 +1,6 @@
 //import './assets/main.css'
 import './assets/style.css'
-import 'ant-design-vue/dist/reset.css';
+//import 'ant-design-vue/dist/reset.css';
 
 import { createApp } from 'vue'
 import App from './App.vue'
@@ -33,6 +33,10 @@ app.mixin({
         getBalance: async function (address) {
             let provider = new ethers.providers.JsonRpcProvider(JSON.parse(localStorage.networks)[localStorage.selectedAccount]);
             return await provider.getBalance(address);
+        },
+        getFee: async function () {
+            let provider = new ethers.providers.JsonRpcProvider(JSON.parse(localStorage.networks)[localStorage.selectedAccount]);
+            return await provider.getFeeData();
         },
         getEth2Currency: function () {
             return window.API.Eth2Currency(localStorage.currency);
