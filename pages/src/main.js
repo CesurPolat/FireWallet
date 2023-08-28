@@ -6,13 +6,14 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 import { ethers } from 'ethers'
-import { Modal,Button, Input } from 'ant-design-vue';
+import { Modal,Button, Input, TypographyTitle, Typography } from 'ant-design-vue';
 
 const app = createApp(App)
 
 app.use(Button);
 app.use(Modal);
 app.use(Input)
+app.use(Typography)
 app.use(router)
 app.mixin({
     mounted: function () {
@@ -48,6 +49,9 @@ app.mixin({
         },
         wei2Eth: function (value) {
             return value / 1000000000000000000;
+        },
+        hex2Wei:async function(address){
+            return parseInt((await this.getBalance(address))["_hex"], 16)
         },
         toCurrency: function (value) {
             if (typeof value !== "number") {

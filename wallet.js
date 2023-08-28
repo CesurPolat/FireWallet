@@ -11,7 +11,6 @@ let wallet = [];
 let provider;
 
 ipcMain.on("SetProvider", (e, network) => {
-    //ws = new WebSocket('ws://localhost:5418');
     provider = new ethers.providers.JsonRpcProvider(network)
 })
 
@@ -28,7 +27,7 @@ ipcMain.on("CreateAccount", (e, password) => {
 })
 
 ipcMain.on("ImportAccount", (e, phrase, password) => {
-    //TODO: Loading
+    //TODO: Loading Router Has Feature
     const Wallet = new ethers.Wallet(phrase, provider);
     wallet.push(Wallet);
     Wallet.encrypt(password).then((data) => {
@@ -75,12 +74,17 @@ ipcMain.on("GetAccounts", async (e) => {
     e.returnValue = wallet.map(x => x.address)
 })
 
+exports.getAccounts=async (e)=>{
+    return wallet.map(x => x.address);
+}
+
 //TODO: Fee
 
 ipcMain.on("SendTransaction", async (e, obj) => {
     port = obj.port
     delete obj.port
     ws.send("http://127.0.0.1:" + port, { message: (wallet.sendTransaction(obj)) });
+    
 
 })
 

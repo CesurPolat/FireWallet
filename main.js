@@ -63,16 +63,16 @@ if (!gotTheLock) {
     app.quit()
   } else {
     console.log("Notification");
-    
+
   }
 } else {
   app.on('second-instance', (event, commandLine, workingPath, additionalData) => {
-    
+
     params = commandLine.pop().split("firewallet://")[1];
-    
+
     //let objTemp = {};
     //commandLine.filter(x => x.includes("=")).map(x => Object.assign(objTemp, { [x.split("=")[0].slice(2)]: x.split("=")[1] }));
-    
+
     if (params) {
       notificationWindow = createWindow(location + "#/notification?" + new URLSearchParams(params).toString(), false)
       focusWindow(notificationWindow)
@@ -83,17 +83,28 @@ if (!gotTheLock) {
   })
 
   const wss = new WebSocket.Server({ port: 5418 });
-    wss.on('connection', function connection(ws) {
-      console.log(util.inspect(server.listeners('connection')));
+  wss.on('connection', function connection(ws) {
 
-      ws.on('error', console.error);
+    ws.on('message', async function message(data) {
+      _data = JSON.parse(data)
+      const accs = await _wallet.getAccounts();
+      //TODO: Locked Account After Unlock Continue
+      if (accs.length == 0) { focusWindow(mWindow); return null; }
+      //TODO: Make it array
+      if (_data.method == "requestAccounts") {
+        notificationWindow = createWindow(location + "#/requestAccounts", false)
+        focusWindow(notificationWindow)
 
-      ws.on('message', function message(data) {
-        console.log('received: %s', data);
-      });
+      }
 
-      ws.send('something');
     });
+
+    //TODO: ?
+    ipcMain.on("WsSend", (e, msg) => {
+      ws.send(Buffer.from(msg.toString(), "utf-8"))
+    })
+
+  });
 
   app.whenReady().then(() => {
 
@@ -153,4 +164,4 @@ function reset() {
   config.reset()
 }
 
-require("./wallet");
+const _wallet = require("./wallet");

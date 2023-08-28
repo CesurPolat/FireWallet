@@ -1,7 +1,7 @@
 <script>
 import { ethers } from 'ethers';
 import NetworksView from './NetworksView.vue';
-const et=ethers;
+const et = ethers;
 
 
 
@@ -16,8 +16,8 @@ export default {
             accounts: [],
             balance: 0,
             open: false,
-            privateKey:"",
-            pass:"",
+            privateKey: "",
+            pass: "",
 
         }
     },
@@ -26,8 +26,8 @@ export default {
         isAdress: function (address) {
             return ethers.isAddress(address)
         },
-        isPrivate:function(key){
-            return et.isHexString(key,32);
+        isPrivate: function (key) {
+            return et.isHexString(key, 32);
         },
         goSend: function (e) {
             if (this.isAdress(e.target.value)) {
@@ -45,11 +45,13 @@ export default {
         },
         createAccount: function () {
             window.API.incAccount();
+            //TODO: Refresh Account After Increased
+            this.$forceUpdate();
         },
-        importWallet: function(key,pass){
-            if(!this.isPrivate(key)){return null}
-            if(window.API.Unlock(pass)){
-                window.API.importWallet(key,pass)
+        importWallet: function (key, pass) {
+            if (!this.isPrivate(key)) { return null }
+            if (window.API.Unlock(pass)) {
+                window.API.importWallet(key, pass)
             }
         },
 
@@ -103,8 +105,9 @@ export default {
                         <button @click="createAccount()">Create Account</button>
                     </div>
                     <div>
-                        <button @click="open=!open">Import Wallet</button>
-                        <a-modal v-model:open="open" title="Import Wallet" class="modal" @ok="importWallet(privateKey,pass);privateKey='';pass=''" @cancel="privateKey='';pass=''">
+                        <button @click="open = !open">Import Wallet</button>
+                        <a-modal v-model:open="open" title="Import Wallet" class="modal"
+                            @ok="importWallet(privateKey, pass); privateKey = ''; pass = ''" @cancel="privateKey = ''; pass = ''">
                             <a-input v-model:value="privateKey" class="mb-2" placeholder="Private Key" />
                             <a-input v-model:value="pass" type="password" class="mb-2" placeholder="Password" />
                         </a-modal>
@@ -154,6 +157,8 @@ export default {
 
             <router-link to="notification"
                 class="font-medium text-red-600 underline dark:text-red-500 hover:no-underline">notification</router-link>
+            <router-link to="requestAccounts"
+                class="font-medium text-red-600 underline dark:text-red-500 hover:no-underline">requestAccounts</router-link>
         </div>
 
         <div v-show="pageShow == 'contacts'">

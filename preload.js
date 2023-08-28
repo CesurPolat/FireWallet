@@ -15,6 +15,7 @@ contextBridge.exposeInMainWorld('API', {
     Lock: () => ipcRenderer.send("Lock"),
     incAccount:()=>ipcRenderer.send("incAccount"),
     GetAccounts:()=>ipcRenderer.sendSync("GetAccounts"),
+    WsSend:(msg)=>ipcRenderer.send("WsSend",msg),
     SendTransaction: (obj) => ipcRenderer.send("SendTransaction", obj),
     StoreHas: (key) => ipcRenderer.sendSync("StoreHas", key),
     ClearData: () => {ipcRenderer.send("ClearData");localStorage.clear()},
