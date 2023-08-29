@@ -78,21 +78,22 @@ exports.getAccounts=async (e)=>{
     return wallet.map(x => x.address);
 }
 
-//TODO: Fee
-
 ipcMain.on("SendTransaction", async (e, obj) => {
-    port = obj.port
-    delete obj.port
-    ws.send("http://127.0.0.1:" + port, { message: (wallet.sendTransaction(obj)) });
+    //TODO: ?
+    delete obj.method
+    delete obj.lastBaseFeePerGas
+    obj.gasPrice=ethers.BigNumber.from(obj.gasPrice)
+    delete obj.gasPrice
+    obj.value =obj.value+''
+    obj.gasLimit = ethers.BigNumber.from(21000)
+    obj.maxFeePerGas=ethers.BigNumber.from(obj.maxFeePerGas)
+    obj.maxPriorityFeePerGas=ethers.BigNumber.from(obj.maxPriorityFeePerGas)
+    console.log(obj);
+    e.returnValue={ message: ((wallet.find(x=>x.address==obj.from)).sendTransaction(obj)) };
     
 
 })
 
-ipcMain.on("Reject", (e, obj) => {
-    port = obj.port
-    axios.post("http://127.0.0.1:" + port, { message: obj.msg });
-
-})
 
 /* {to?: string, from?: string, nonce?: BigNumberish,
 

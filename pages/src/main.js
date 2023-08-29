@@ -28,14 +28,14 @@ app.mixin({
             return window.API.GetAccounts();
         },
         getAccount: function(){
-            return this.getAccounts(localStorage.selectedAccount)[0];
+            return this.getAccounts()[localStorage.selectedAccount];
         },
         getBalance: async function (address) {
-            let provider = new ethers.providers.JsonRpcProvider(JSON.parse(localStorage.networks)[localStorage.selectedAccount]);
+            let provider = new ethers.providers.JsonRpcProvider(JSON.parse(localStorage.networks)[localStorage.selectedNetwork]);
             return await provider.getBalance(address);
         },
         getFee: async function () {
-            let provider = new ethers.providers.JsonRpcProvider(JSON.parse(localStorage.networks)[localStorage.selectedAccount]);
+            let provider = new ethers.providers.JsonRpcProvider(JSON.parse(localStorage.networks)[localStorage.selectedNetwork]);
             return await provider.getFeeData();
         },
         getEth2Currency: function () {

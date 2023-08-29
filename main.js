@@ -98,10 +98,14 @@ if (!gotTheLock) {
       //TODO: Locked Account After Unlock Continue
       if (accs.length == 0) { focusWindow(mWindow); return null; }
       //TODO: Make it array
-      if (_data.method == "requestAccounts") {
-        notificationWindow = createWindow(location + "#/requestAccounts", false)
-        focusWindow(notificationWindow)
 
+      if (_data.method == "requestAccounts") {
+        window = createWindow(location + "#/requestAccounts", false)
+        focusWindow(window)
+      }
+      if (_data.method == "sendTransaction") {
+        window = createWindow(location + "#/notification?" + new URLSearchParams(_data).toString(), false)
+        focusWindow(window)
       }
 
     });

@@ -2,7 +2,7 @@
 
 export default {
     mounted: function () {
-        window.API.SetProvider(localStorage.networks[localStorage.selectedNetwork]);
+        window.API.SetProvider(JSON.parse(localStorage.networks)[localStorage.selectedNetwork]);
         
         setTimeout(() => {
             if (window.API.StoreHas("wallet")) {

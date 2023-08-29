@@ -12,7 +12,7 @@ export default {
             this.selectedNetwork = e.target.value
             this.selectedNetwork=this.selectedNetwork
             //TODO: Loading
-            window.API.SetProvider(this.networks[this.selectedNetwork]);
+            window.API.SetProvider(JSON.parse(localStorage.networks)[this.selectedNetwork]);
         }
     },
     mounted: function () {

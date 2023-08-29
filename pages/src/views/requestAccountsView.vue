@@ -10,6 +10,7 @@ export default {
     },
     methods: {
         Reject:()=>{
+            //TODO: Edit
             window.API.WsSend("Rejected");
             window.close()
         },
@@ -42,7 +43,7 @@ export default {
                 <div v-html="getJdenticon(account)" class="cursor-pointer"></div>
                 <div>
                     <h2 class="whitespace-nowrap overflow-hidden text-ellipsis w-56 m-0">{{ account }}</h2>
-                    <p class="m-0 text-left ">{{ balance[idx] }} ETH</p>
+                    <p class="m-0 text-left ">{{ balance[idx] }} ETH</p><!-- TODO: Do not show if ether 0 -->
                 </div>
             </div>
         </div>

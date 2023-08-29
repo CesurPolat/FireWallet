@@ -15,11 +15,12 @@ export default {
     },
     methods: {
         SendTransaction: function (obj) {
-            window.API.SendTransaction(obj)
+            console.log(window.API.SendTransaction(obj));
+            //window.API.WsSend()
             window.close()
         },
         Reject: function (obj) {
-            window.API.SendTransaction(obj)
+            window.API.WsSend(JSON.stringify(obj))
             window.close()
         },
         changeValue: function (e) {
@@ -28,9 +29,7 @@ export default {
         },
         changeGas: function (e, type) {
             //TODO: Func
-            this.obj[type] = { _hex: "0x" + (e.target.value * 1000000000000000000).toString(16) }
-            this.gasPrice = this.obj.gasPrice;
-            this.maxGas = this.obj.maxFeePerGas;
+            this.obj[type] = "0x" + (e.target.value * 1000000000000000000).toString(16)
             console.log(this.obj);
 
 
@@ -39,16 +38,17 @@ export default {
     },
     mounted: async function () {
         this.obj = this.$route.query;
-        this.obj = { from: "0x70997970C51812dc3A010C7d01b50e0d17dc79C8", to: "0x70997970C51812dc3A010C7d01b50e0d17dc79C8", value: 10000 }
+        //TODO: Auto Refresh
+        let gas =await this.getFee();
+        Object.keys(gas).forEach(function (key, idx){gas[key] = gas[key]._hex})
+        //this.obj = { from: "0x70997970C51812dc3A010C7d01b50e0d17dc79C8", to: "0x70997970C51812dc3A010C7d01b50e0d17dc79C8", value: 10000 }
         if (this.obj.gasPrice == undefined) {
-            this.obj = { ...this.obj, ...await this.getFee() };
+            this.obj = { ...this.obj, ...gas };
         } else {
             this.type = "Özel"
         }
         this.gasPrice = this.obj.gasPrice;
         this.maxGas = this.obj.maxFeePerGas;
-
-        console.log(this.obj);
 
         //TODO: ?
         this.balance = this.wei2Eth(parseInt((await this.getBalance(this.obj.from))["_hex"], 16));
@@ -94,7 +94,7 @@ export default {
                     {{ networks[selectedNetwork] }}
                 </div>
             </div>
-            <div class="flex p-2">
+            <div class="flex p-2"><!-- TODO Implemeent to obj -->
                 <div class="w-14">Amount: </div><img src="@/assets/ethereum-eth-logo.svg" alt="ETH" class="w-3 ml-2 mr-2">
                 <input type="number" @change="changeValue" :value='wei2Eth(obj.value).toFixed(16).replace(/\.?0+$/, "")'
                     class="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
@@ -102,33 +102,33 @@ export default {
 
             <div class="flex p-2 justify-between items-center">
                 <div class="flex">
-                    <div class="w-20">Gas Price:</div>{{ wei2Eth(parseInt(this.obj.gasPrice?._hex,
+                    <div class="w-20">Gas Price:</div>{{ wei2Eth(parseInt(this.obj.gasPrice,
                         16)).toFixed(16).replace(/\.?0+$/,
                             "") }}
                 </div>
                 <div>
                     <button class=" text-red-500 hover:underline" @click="open = !open">{{ type }} ></button>
-                    <a-modal v-model:open="open" title="Import Wallet" class="modal" @ok="open = !open"
-                        @cancel="obj.gasPrice = { _hex: gasPrice }; obj.maxFeePerGas = { _hex: maxGas }"><!-- TODO: ???? Cancel Big Problem -->
-                        <a-input :value='wei2Eth(obj.maxFeePerGas._hex).toFixed(16).replace(/\.?0+$/, "")'
+                    <a-modal v-model:open="open" title="Import Wallet" class="modal" @ok="gasPrice = obj.gasPrice; maxFeePerGas = obj.maxGas; open = !open"
+                        @cancel="obj.gasPrice = gasPrice; obj.maxFeePerGas = maxGas"><!-- TODO: ???? Cancel Big Problem -->
+                        <a-input :value='wei2Eth(obj.maxFeePerGas).toFixed(16).replace(/\.?0+$/, "")'
                             @change="(event) => changeGas(event, 'maxFeePerGas')" type="number" class="mb-2"
                             placeholder="Gas Limit" />
-                        <a-input :value='wei2Eth(obj.gasPrice._hex).toFixed(16).replace(/\.?0+$/, "")'
+                        <a-input :value='wei2Eth(obj.gasPrice).toFixed(16).replace(/\.?0+$/, "")'
                             @change="(event) => changeGas(event, 'gasPrice')" type="number" class="mb-2"
                             placeholder="Gas Price" />
                     </a-modal>
                 </div>
             </div>
             <div class="flex p-2">
-                <div class="w-20">Total:</div>{{ wei2Eth(parseInt(this.obj.gasPrice?._hex, 16) +
+                <div class="w-20">Total:</div>{{ wei2Eth(parseInt(this.obj.gasPrice, 16) +
                     obj.value).toFixed(16).replace(/\.?0+$/, "") }}
             </div>
 
         </div>
         <div class="h-[10vh] flex items-center justify-around text-xl [&>*]:p-1">
-            <button @click="Reject({ port: obj.port, msg: 'User Rejected Transaction' })"
+            <button @click="Reject({ msg: 'User Rejected Transaction' })"
                 class="border border-red-500 text-red-500 rounded-full w-[40vw]">Reject</button>
-            <button @click="SendTransaction(this.$route.query)"
+            <button @click="SendTransaction({...obj})"
                 class="bg-red-500 text-white rounded-full w-[40vw] hover:opacity-90 disabled:bg-red-800"
                 :disabled="wei2Eth(obj.value) > balance">Confirm</button>
         </div>
