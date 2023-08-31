@@ -18,7 +18,7 @@ let ready2Close = false;
 let mWindow = null;
 const gotTheLock = app.requestSingleInstanceLock();
 const logo = path.join(__dirname, "logo.png");
-const location = app.isPackaged ? url.format({ pathname: path.join(__dirname, 'dist/index.html'), protocol: 'file:', slashes: true }) : "http://localhost:5173/";
+const location = app.isPackaged ? url.format({ pathname: path.join(__dirname, 'pageDist/index.html'), protocol: 'file:', slashes: true }) : "http://localhost:5173/";
 
 function createWindow(Local, isTray = true) {
   const mainWindow = new BrowserWindow({

@@ -5,7 +5,7 @@
   "main": "main.js",
   "scripts": {
     "start": "concurrently \"cd pages && npm run dev\" \"electron .\"",
-    "build": "(cd pages && npm run build) & (cd .. && electron-packager . --ignore=pages)",
+    "build": "(cd pages && npm run build) & (cd .. && npm run dist)",
     "pack": "electron-builder --dir",
     "dist": "electron-builder"
   },
