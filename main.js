@@ -112,6 +112,7 @@ if (!gotTheLock) {
 
     //TODO: ?
     ipcMain.on("WsSend", (e, msg) => {
+      console.log(msg);
       ws.send(Buffer.from(msg.toString(), "utf-8"))
     })
 

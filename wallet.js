@@ -90,7 +90,11 @@ ipcMain.on("SendTransaction", async (e, obj) => {
     /* obj.maxFeePerGas=ethers.BigNumber.from(obj.maxFeePerGas)
     obj.maxPriorityFeePerGas=ethers.BigNumber.from(obj.maxPriorityFeePerGas) */
     console.log(obj);
-    e.returnValue={ message: ((wallet.find(x=>x.address==obj.from)).sendTransaction(obj)) };
+    (wallet.find(x=>x.address==obj.from)).sendTransaction(obj).then((resp)=>{
+        e.returnValue=resp
+    }).catch((err)=>{
+        e.returnValue=(JSON.parse(err.body)).error.message
+    })
     
 
 })

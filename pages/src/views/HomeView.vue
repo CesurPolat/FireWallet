@@ -104,7 +104,7 @@ export default {
                     <div>
                         <button @click="createAccount()">Create Account</button>
                     </div>
-                    <div>
+                    <div><!-- TODO Fix important -->
                         <button @click="open = !open">Import Wallet</button>
                         <a-modal v-model:open="open" title="Import Wallet" class="modal"
                             @ok="importWallet(privateKey, pass); privateKey = ''; pass = ''" @cancel="privateKey = ''; pass = ''">
@@ -155,10 +155,7 @@ export default {
 
             </div>
 
-            <router-link to="notification"
-                class="font-medium text-red-600 underline dark:text-red-500 hover:no-underline">notification</router-link>
-            <router-link to="requestAccounts"
-                class="font-medium text-red-600 underline dark:text-red-500 hover:no-underline">requestAccounts</router-link>
+            <!-- Bottom -->
         </div>
 
         <div v-show="pageShow == 'contacts'">

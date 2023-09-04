@@ -14,9 +14,8 @@ export default {
         }
     },
     methods: {
-        SendTransaction: function (obj) {
-            console.log(window.API.SendTransaction(obj));
-            //window.API.WsSend()
+        SendTransaction: async function (obj) {
+            window.API.WsSend(JSON.stringify(await window.API.SendTransaction(obj)))
             window.close()
         },
         Reject: function (obj) {
@@ -88,7 +87,7 @@ export default {
                 <div class="flex">
                     <div class="w-14">Balance:</div> <img src="@/assets/ethereum-eth-logo.svg" alt="ETH"
                         class="w-3 ml-2 mr-2">
-                    {{ balance }}
+                    <div class="whitespace-nowrap overflow-hidden text-ellipsis w-20">{{ balance }}</div>
                 </div>
                 <div class="border rounded-full p-1">
                     {{ networks[selectedNetwork] }}
