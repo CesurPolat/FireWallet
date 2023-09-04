@@ -15,6 +15,7 @@ export default {
     },
     methods: {
         SendTransaction: async function (obj) {
+            /* It's not close Succesful */
             window.API.WsSend(JSON.stringify(await window.API.SendTransaction(obj)))
             window.close()
         },
