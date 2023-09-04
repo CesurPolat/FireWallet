@@ -1,10 +1,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue';
 import LoadingView from '../views/LoadingView.vue';
-import UnlockView from '../views/UnlockView.vue';
-import CreateView from '../views/CreateView.vue';
-import NotificationView from '../views/NotificationView.vue';
-import requestAccounts from '../views/requestAccountsView.vue';
+
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -17,27 +14,27 @@ const router = createRouter({
     {
       path:'/home',
       name:'Home',
-      component:HomeView
+      component:HomeView,
     },
     {
       path:'/unlock',
       name:'Unlock',
-      component:UnlockView
+      component:() => import('../views/UnlockView.vue')
     },
     {
       path:'/notification',
       name:'Notification',
-      component:NotificationView
+      component:() => import('../views/NetworksView.vue')
     },
     {
       path:'/create',
       name:'Create Wallet',
-      component:CreateView
+      component:() => import('../views/CreateView.vue')
     },
     {
       path:'/requestAccounts',
       name:'Request Accounts',
-      component:requestAccounts
+      component:() => import('../views/requestAccountsView.vue')
     },
     {
       path: "/:catchAll(.*)",

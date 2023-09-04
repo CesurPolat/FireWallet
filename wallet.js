@@ -85,9 +85,10 @@ ipcMain.on("SendTransaction", async (e, obj) => {
     obj.gasPrice=ethers.BigNumber.from(obj.gasPrice)
     delete obj.gasPrice
     obj.value =obj.value+''
-    obj.gasLimit = ethers.BigNumber.from(21000)
-    obj.maxFeePerGas=ethers.BigNumber.from(obj.maxFeePerGas)
-    obj.maxPriorityFeePerGas=ethers.BigNumber.from(obj.maxPriorityFeePerGas)
+    /* TODO: Fix !important */
+    obj.gasLimit = ethers.BigNumber.from(60000)
+    /* obj.maxFeePerGas=ethers.BigNumber.from(obj.maxFeePerGas)
+    obj.maxPriorityFeePerGas=ethers.BigNumber.from(obj.maxPriorityFeePerGas) */
     console.log(obj);
     e.returnValue={ message: ((wallet.find(x=>x.address==obj.from)).sendTransaction(obj)) };
     
