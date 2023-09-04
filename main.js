@@ -7,8 +7,6 @@ const WebSocket = require("ws");
 const config = require("./config.js");
 const store = new Store()
 
-//TODO: Edit Package.json Scripts
-
 global.share = { ipcMain }
 global.store = { store }
 
@@ -105,6 +103,11 @@ if (!gotTheLock) {
       }
       if (_data.method == "sendTransaction") {
         window = createWindow(location + "#/notification?" + new URLSearchParams(_data).toString(), false)
+        focusWindow(window)
+      }
+
+      if (_data.method == "sign") {
+        window = createWindow(location + "#/sign?" + new URLSearchParams(_data).toString(), false)
         focusWindow(window)
       }
 

@@ -91,8 +91,20 @@ ipcMain.on("SendTransaction", async (e, obj) => {
     obj.maxPriorityFeePerGas=ethers.BigNumber.from(obj.maxPriorityFeePerGas) */
     console.log(obj);
     (wallet.find(x=>x.address==obj.from)).sendTransaction(obj).then((resp)=>{
-        e.returnValue={code:204}
+        e.returnValue={result:resp+''}
     }).catch((err)=>{
+        e.returnValue=(JSON.parse(err?.body)).error.message
+    })
+    
+
+})
+
+ipcMain.on("SignMessage", async (e, obj) => {
+    
+    (wallet.find(x=>x.address==obj.from)).signMessage(obj.message).then((resp)=>{
+        e.returnValue={result:resp+''}
+    }).catch((err)=>{
+        console.log("Here");
         e.returnValue=(JSON.parse(err?.body)).error.message
     })
     
