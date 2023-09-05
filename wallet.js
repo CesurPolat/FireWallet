@@ -1,11 +1,8 @@
 const ethers = require("ethers");
 const axios = require('axios');
-const WebSocket = require("ws");
 
 const ipcMain = global.share.ipcMain;
 const store = global.store.store;
-
-let ws;
 
 let wallet = [];
 let provider;
@@ -19,15 +16,13 @@ ipcMain.on("CreateAccount", (e, password) => {
     wallet.push(Wallet);
     Wallet.encrypt(password).then((data) => {
         store.set('wallet', [...store.get("wallet"), data]);
-
-        //TODO: Test
         store.set("accountCreated", [...store.get("accountCreated"), 1])
     })
     e.returnValue = Wallet.mnemonic?.phrase;
 })
 
 ipcMain.on("ImportAccount", (e, phrase, password) => {
-    //TODO: Loading Router Has Feature
+    //TODO: Loading
     const Wallet = new ethers.Wallet(phrase, provider);
     wallet.push(Wallet);
     Wallet.encrypt(password).then((data) => {
@@ -110,21 +105,6 @@ ipcMain.on("SignMessage", async (e, obj) => {
     
 
 })
-
-
-/* {to?: string, from?: string, nonce?: BigNumberish,
-
-      gasLimit?: BigNumberish, gasPrice?: BigNumberish,
-
-      data?: BytesLike, value?: BigNumberish, chainId?: number
-
-      type?: number; accessList?: AccessListish;
-
-      maxPriorityFeePerGas?: BigNumberish; maxFeePerGas?: BigNumberish;
-
-      customData?: Record<string, any>; ccipReadEnabled?: boolean;} */
-
-//https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms="+store.get("currency")
 
 ipcMain.on("eth2Currency", async (e,currency="USD") => {
     axios.get("https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=" + currency).then((resp) => {

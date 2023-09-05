@@ -54,7 +54,6 @@ function createWindow(Local, isTray = true) {
 }
 
 let params = process.argv.pop().split("firewallet://")[1];
-//process.argv.filter(x => x.includes("=")).map(x => Object.assign(obj, { [x.split("=")[0].slice(2)]: x.split("=")[1] }));
 
 if (!gotTheLock) {
   if (!params) {
@@ -69,19 +68,7 @@ if (!gotTheLock) {
 
     params = commandLine.pop().split("firewallet://")[1];
 
-    
-
-    //let objTemp = {};
-    //commandLine.filter(x => x.includes("=")).map(x => Object.assign(objTemp, { [x.split("=")[0].slice(2)]: x.split("=")[1] }));
-
-    if (params) {
-      /* notificationWindow = createWindow(location + "#/notification?" + new URLSearchParams(params).toString(), false)
-      focusWindow(notificationWindow) */
-     
-
-    } else {
-      focusWindow(mWindow)
-    }
+    focusWindow(mWindow)
 
   })
 
@@ -115,7 +102,6 @@ if (!gotTheLock) {
 
     //TODO: ?
     ipcMain.on("WsSend", (e, msg) => {
-      console.log(msg);
       ws.send(Buffer.from(msg.toString(), "utf-8"))
     })
 
@@ -171,6 +157,7 @@ app.setLoginItemSettings({
 function focusWindow(window) {
   if (window) {
     if (window.isMinimized()) window.restore()
+    window.show()
     window.focus()
   }
 }
