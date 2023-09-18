@@ -1,10 +1,9 @@
 <script>
 import { ethers } from "ethers";
 import NetworksView from "./NetworksView.vue";
-import { SendOutlined  } from '@ant-design/icons-vue';
-import { ref } from 'vue';
-const activeKey = ref('1');
-const et = ethers;
+import { SendOutlined } from "@ant-design/icons-vue";
+import { ref } from "vue";
+const activeKey = ref("1");
 
 export default {
   data: function () {
@@ -19,7 +18,6 @@ export default {
       privateKey: "",
       pass: "",
       lStorage: ref(localStorage),
-      
     };
   },
   methods: {
@@ -28,7 +26,7 @@ export default {
       return ethers.isAddress(address);
     },
     isPrivate: function (key) {
-      return et.isHexString(key, 32);
+      return ethers.utils.isHexString(key, 32);
     },
     goSend: function (e) {
       if (this.isAdress(e.target.value)) {
@@ -54,8 +52,13 @@ export default {
         return null;
       }
       if (window.API.Unlock(pass)) {
-        window.API.importWallet(key, pass);
+        window.API.ImportAccount(key, pass);
       }
+    },
+    getBalanceEther: async function () {
+      this.balance = this.wei2Eth(
+        parseInt((await this.getBalance(this.getAccount()))["_hex"], 16)
+      );
     },
   },
   filters: {},
@@ -63,11 +66,8 @@ export default {
   mounted: async function () {
     this.currency = this.getEth2Currency();
     this.accounts = this.getAccounts();
-    //TODO:Balance Eth
-    this.balance = this.wei2Eth(
-      parseInt((await this.getBalance(this.getAccount()))["_hex"], 16)
-    );
 
+    this.getBalanceEther();
     setInterval(() => {
       this.currency = this.getEth2Currency();
     }, 10000);
@@ -111,14 +111,19 @@ export default {
           <div>
             <!-- TODO: Overflow text -->
             <div
-              @click=""
               class="flex items-center"
               v-for="(account, idx) in getAccounts()"
+              :key="idx"
             >
+              <!-- TODO: Func -->
               <div
                 v-html="getJdenticon(account, 30)"
                 class="cursor-pointer"
-                @click="lStorage.selectedAccount = idx;profile = false"
+                @click="
+                  lStorage.selectedAccount = idx;
+                  profile = false;
+                  getBalanceEther();
+                "
               ></div>
               {{ account }}
             </div>
@@ -127,7 +132,6 @@ export default {
             <button @click="createAccount()">Create Account</button>
           </div>
           <div>
-            <!-- TODO Fix important -->
             <button @click="open = !open">Import Wallet</button>
             <a-modal
               v-model:open="open"
@@ -137,6 +141,7 @@ export default {
                 importWallet(privateKey, pass);
                 privateKey = '';
                 pass = '';
+                open = false;
               "
               @cancel="
                 privateKey = '';
@@ -166,38 +171,40 @@ export default {
 
   <div>
     <div class="flex flex-col items-center" v-if="pageShow == 'home'">
-      <!-- TODO: Popover -->
-      <div class="w-full flex flex-col items-center bg-red-100">
-        <!-- TODO:Reopen -->
-        <div
-          class="hover:bg-red-400 rounded-md p-1 m-1 flex flex-col items-center text-sm cursor-pointer"
-          @click="copyContent(getAccount())"
-        >
-          <h1>Account</h1>
-          <h2 class="whitespace-nowrap overflow-hidden text-ellipsis w-24">
-            {{ getAccount() }}
-          </h2>
+
+      <a-tooltip placement="bottom">
+        <template #title>
+          <span>Click To Copy</span>
+        </template>
+        <div class="w-full flex flex-col items-center bg-red-100">
+          <!-- TODO:Reopen -->
+          <div
+            class="hover:bg-red-400 rounded-md p-1 m-1 flex flex-col items-center text-sm cursor-pointer"
+            @click="copyContent(getAccount())"
+          >
+            <h1>Account</h1>
+            <h2 class="whitespace-nowrap overflow-hidden text-ellipsis w-24">
+              {{ getAccount() }}
+            </h2>
+          </div>
         </div>
-      </div>
+      </a-tooltip>
 
       <h1 class="text-3xl">{{ balance }} ETH</h1>
-      <!-- TODO: Every Click Event Trigger it -->
       <h2>{{ toCurrency(currency * balance) }}</h2>
       <div class="flex text-xl">
-        <div class="flex flex-col items-center cursor-pointer m-1" @click="pageShow = 'contacts'">
-          <SendOutlined class="bg-red-500 rounded-full m-1 p-1  text-white"/>
-          <h2  class="text-red-500">Send</h2>
+        <div
+          class="flex flex-col items-center cursor-pointer m-1"
+          @click="pageShow = 'contacts'"
+        >
+          <SendOutlined class="bg-red-500 rounded-full m-1 p-1 text-white" />
+          <h2 class="text-red-500">Send</h2>
         </div>
       </div>
 
       <a-tabs v-model:activeKey="activeKey" centered>
-        
-        <a-tab-pane key="1" tab="History" force-render>
-            History
-        </a-tab-pane>
-        <a-tab-pane key="2" tab="NFTs">
-            NFT
-        </a-tab-pane>
+        <a-tab-pane key="1" tab="History" force-render> History </a-tab-pane>
+        <a-tab-pane key="2" tab="NFTs"> NFT </a-tab-pane>
       </a-tabs>
 
       <!-- Bottom -->
