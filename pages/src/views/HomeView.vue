@@ -45,7 +45,6 @@ export default {
     },
     createAccount: function () {
       window.API.incAccount();
-      //TODO: Refresh Account After Increased
       this.$forceUpdate();
     },
     importWallet: function (key, pass) {

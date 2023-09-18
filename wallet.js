@@ -13,7 +13,6 @@ ipcMain.on("SetProvider", (e, network) => {
 
 ipcMain.on("CreateAccount", (e, password) => {
     const Wallet = ethers.Wallet.createRandom(provider);
-    wallet.push(Wallet);
     Wallet.encrypt(password).then((data) => {
         store.set('wallet', [...store.get("wallet"), data]);
         store.set("accountCreated", [...store.get("accountCreated"), 1])
@@ -27,7 +26,7 @@ ipcMain.on("ImportAccount", (e, phrase, password) => {
     wallet.push(Wallet);
     Wallet.encrypt(password).then((data) => {
         store.set('wallet', [...store.get("wallet"), data]);
-        store.set("accountCreated", [...store.get("accountCreated"), 1])
+        store.set("accountCreated", [...store.get("accountCreated"), 0])
 
     })
 })
@@ -58,7 +57,8 @@ ipcMain.on("Lock", (e) => {
 })
 
 ipcMain.on("incAccount", (e) => {
-    const tempWallet = ethers.Wallet.fromMnemonic(wallet[0].mnemonic.phrase, "m/44'/60'/" + (store.get("accountCreated")-1) + "'/0/0")
+    const tempWallet = ethers.Wallet.fromMnemonic(wallet[0].mnemonic.phrase, "m/44'/60'/" + (store.get("accountCreated")) + "'/0/0")
+    console.log(tempWallet);
     wallet.push(tempWallet.connect(provider));
     var temp=store.get("accountCreated");
     temp[0]++;
@@ -66,6 +66,7 @@ ipcMain.on("incAccount", (e) => {
 })
 
 ipcMain.on("GetAccounts", async (e) => {
+    console.log(wallet.map(x => x.address));
     e.returnValue = wallet.map(x => x.address)
 })
 
