@@ -22,7 +22,7 @@ app.mixin({
     mounted: function () {
         //TODO: Config
         if (localStorage.currency == undefined) { localStorage.currency = "USD" }
-        if (localStorage.networks == undefined) { localStorage.networks = '["http://127.0.0.1:8545"]' }
+        if (localStorage.networks == undefined) { localStorage.networks = '["https://mainnet.infura.io/v3/35e6f7558e65452aab95be396a0ca8fd","http://127.0.0.1:8545"]' }
         if (localStorage.selectedNetwork == undefined) { localStorage.selectedNetwork = 0 }
         if (localStorage.selectedAccount == undefined) { localStorage.selectedAccount = 0 }
     },

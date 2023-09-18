@@ -42,6 +42,11 @@ const router = createRouter({
       component:() => import('../views/SignView.vue')
     },
     {
+      path:'/test',
+      name:'test',
+      component:() => import('../views/TestView.vue')
+    },
+    {
       path: "/:catchAll(.*)",
       redirect:'/'
     }

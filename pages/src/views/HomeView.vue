@@ -3,6 +3,7 @@ import { ethers } from "ethers";
 import NetworksView from "./NetworksView.vue";
 import { SendOutlined } from "@ant-design/icons-vue";
 import { ref } from "vue";
+import { RouterLink } from "vue-router";
 const activeKey = ref("1");
 
 export default {
@@ -72,7 +73,7 @@ export default {
       this.currency = this.getEth2Currency();
     }, 10000);
   },
-  components: { NetworksView, SendOutlined },
+  components: { NetworksView, SendOutlined, RouterLink },
 };
 </script>
 
@@ -108,8 +109,7 @@ export default {
               Lock
             </button>
           </div>
-          <div>
-            <!-- TODO: Overflow text -->
+          <div class="max-h-80 overflow-hidden overflow-y-auto">
             <div
               class="flex items-center"
               v-for="(account, idx) in getAccounts()"
@@ -202,6 +202,8 @@ export default {
         </div>
       </div>
 
+      <RouterLink to="test">Test</RouterLink>
+
       <a-tabs v-model:activeKey="activeKey" centered>
         <a-tab-pane key="1" tab="History" force-render> History </a-tab-pane>
         <a-tab-pane key="2" tab="NFTs"> NFT </a-tab-pane>
@@ -210,7 +212,7 @@ export default {
       <!-- Bottom -->
     </div>
 
-    <div v-show="pageShow == 'contacts'">
+    <!-- <div v-show="pageShow == 'contacts'">
       <div class="flex justify-between items-center text-center mt-3">
         <h1 class="w-1/3"> </h1>
         <h1 class="w-1/3 text-xl">Send to</h1>
@@ -232,6 +234,6 @@ export default {
       Send to
       {{ sendAddress }}
       <input type="number" name="" id="" />
-    </div>
+    </div> -->
   </div>
 </template>

@@ -10,7 +10,8 @@ export default {
     methods:{
         changeNetwork: function(e){
             this.selectedNetwork = e.target.value
-            this.selectedNetwork=this.selectedNetwork
+            localStorage.selectedNetwork=this.selectedNetwork;
+            this.$router.go(0);
             //TODO: Loading
             window.API.SetProvider(JSON.parse(localStorage.networks)[this.selectedNetwork]);
         }
@@ -25,10 +26,8 @@ export default {
 </script>
 
 <template>
-    <!-- TODO: Text Size-->
     <select
-        class="bg-transparent border rounded-full p-1 text-white text-sm" @change="changeNetwork">
-        <!-- TODO: Text Color -->
+        class="bg-transparent border rounded-full p-1 text-white text-sm overflow-hidden w-40 outline-none" @change="changeNetwork">
         <option v-for="network,i in networks" :selected="selectedNetwork == i" v-bind:value="i" class="text-black">{{ network }}</option>
     </select>
 </template>
