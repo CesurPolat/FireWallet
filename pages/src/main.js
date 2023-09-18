@@ -6,7 +6,7 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 import { ethers } from 'ethers'
-import { Modal,Button, Input, TypographyTitle, Typography } from 'ant-design-vue';
+import { Modal,Button, Input, Tabs, Typography } from 'ant-design-vue';
 
 const app = createApp(App)
 
@@ -14,6 +14,7 @@ app.use(Button);
 app.use(Modal);
 app.use(Input)
 app.use(Typography)
+app.use(Tabs)
 app.use(router)
 app.mixin({
     mounted: function () {
