@@ -176,7 +176,6 @@ export default {
           <span>Click To Copy</span>
         </template>
         <div class="w-full flex flex-col items-center bg-red-100">
-          <!-- TODO:Reopen -->
           <div
             class="hover:bg-red-400 rounded-md p-1 m-1 flex flex-col items-center text-sm cursor-pointer"
             @click="copyContent(getAccount())"

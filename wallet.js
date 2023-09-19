@@ -58,7 +58,6 @@ ipcMain.on("Lock", (e) => {
 
 ipcMain.on("incAccount", (e) => {
     const tempWallet = ethers.Wallet.fromMnemonic(wallet[0].mnemonic.phrase, "m/44'/60'/" + (store.get("accountCreated")) + "'/0/0")
-    console.log(tempWallet);
     wallet.push(tempWallet.connect(provider));
     var temp=store.get("accountCreated");
     temp[0]++;
@@ -66,7 +65,6 @@ ipcMain.on("incAccount", (e) => {
 })
 
 ipcMain.on("GetAccounts", async (e) => {
-    console.log(wallet.map(x => x.address));
     e.returnValue = wallet.map(x => x.address)
 })
 
