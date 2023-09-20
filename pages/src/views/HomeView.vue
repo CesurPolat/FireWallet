@@ -4,6 +4,7 @@ import NetworksView from "./NetworksView.vue";
 import { SendOutlined } from "@ant-design/icons-vue";
 import { ref } from "vue";
 import { RouterLink } from "vue-router";
+import { getGateways} from 'ipfschecker';
 const activeKey = ref("1");
 
 export default {
