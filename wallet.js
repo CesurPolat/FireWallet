@@ -20,6 +20,15 @@ ipcMain.on("CreateAccount", (e, password) => {
     e.returnValue = Wallet.mnemonic?.phrase;
 })
 
+//TODO: ^
+ipcMain.on("incAccount", (e) => {
+    const tempWallet = ethers.Wallet.fromMnemonic(wallet[0].mnemonic.phrase, "m/44'/60'/" + (store.get("accountCreated")) + "'/0/0")
+    wallet.push(tempWallet.connect(provider));
+    var temp=store.get("accountCreated");
+    temp[0]++;
+    store.set("accountCreated", temp)
+})
+
 ipcMain.on("ImportAccount", (e, phrase, password) => {
     //TODO: Loading
     const Wallet = new ethers.Wallet(phrase, provider);
@@ -32,6 +41,7 @@ ipcMain.on("ImportAccount", (e, phrase, password) => {
 })
 
 ipcMain.on("Unlock", async (e, password) => {
+    wallet=[];
 
     try {
         for (let x = 0; x < store.get("wallet").length; x++) {
@@ -47,21 +57,12 @@ ipcMain.on("Unlock", async (e, password) => {
 
         e.returnValue = true;
     } catch (err) {
-        console.log(err);
         e.returnValue = false;
     }
 })
 
 ipcMain.on("Lock", (e) => {
     wallet = []
-})
-
-ipcMain.on("incAccount", (e) => {
-    const tempWallet = ethers.Wallet.fromMnemonic(wallet[0].mnemonic.phrase, "m/44'/60'/" + (store.get("accountCreated")) + "'/0/0")
-    wallet.push(tempWallet.connect(provider));
-    var temp=store.get("accountCreated");
-    temp[0]++;
-    store.set("accountCreated", temp)
 })
 
 ipcMain.on("GetAccounts", async (e) => {
