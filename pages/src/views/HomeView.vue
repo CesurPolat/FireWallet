@@ -180,6 +180,7 @@ export default {
           >
             <h1>Account</h1>
             <h2 class="whitespace-nowrap overflow-hidden text-ellipsis w-24">
+              <!-- When account change not change address -->
               {{ getAccount() }}
             </h2>
           </div>
@@ -198,7 +199,6 @@ export default {
         </div>
       </div>
 
-      <RouterLink to="test">Test</RouterLink>
 
       <a-tabs v-model:activeKey="activeKey" centered>
         <a-tab-pane key="1" tab="History" force-render> History </a-tab-pane>

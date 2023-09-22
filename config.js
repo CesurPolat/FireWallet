@@ -1,6 +1,5 @@
 template = {
     "wallet": [],
-    "accountCreated":[],
     //TODO: Contact
 }
 
