@@ -11,7 +11,7 @@ contextBridge.exposeInMainWorld('API', {
     SetProvider:(network)=>ipcRenderer.send("SetProvider",network),
     CreateAccount: (password) => ipcRenderer.sendSync("CreateAccount", password),
     ImportAccount: (phrase, password) => ipcRenderer.sendSync("ImportAccount", phrase, password),
-    Unlock: (password) => ipcRenderer.sendSync("Unlock", password),
+    Unlock: async (password) => ipcRenderer.sendSync("Unlock", password),
     Lock: () => ipcRenderer.send("Lock"),
     incAccount:()=>ipcRenderer.send("incAccount"),
     GetAccounts:()=>ipcRenderer.sendSync("GetAccounts"),
