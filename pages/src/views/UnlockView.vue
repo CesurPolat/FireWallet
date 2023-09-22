@@ -9,6 +9,7 @@ export default {
   },
   methods: {
     unlock: async function () {
+        /* TODO: Fix */
       this.setLoading(true);
       this.$forceUpdate();
       const tempRouter = this.$router;

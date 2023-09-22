@@ -99,6 +99,9 @@ app.mixin({
     setLoading: function(bool){
         loading.value=bool
     },
+    isAdress: function (address) {
+      return ethers.isAddress(address);
+    },
     
   },
 });

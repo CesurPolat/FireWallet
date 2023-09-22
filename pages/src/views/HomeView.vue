@@ -23,10 +23,7 @@ export default {
     };
   },
   methods: {
-    //TODO: GLOB
-    isAdress: function (address) {
-      return ethers.isAddress(address);
-    },
+    
     isPrivate: function (key) {
       return ethers.utils.isHexString(key, 32);
     },
