@@ -95,7 +95,6 @@ if (!gotTheLock) {
     ws.on("message", async function message(data) {
       _data = JSON.parse(data);
 
-      //TODO: Remove
       const accs = await _wallet.getAccounts();
       //TODO: Locked Account After Unlock Continue
       if (accs.length == 0) {

@@ -1,6 +1,6 @@
 <script>
 import { ethers } from "ethers";
-import NetworksView from "./NetworksView.vue";
+import NetworksView from "../components/NetworksView.vue";
 import { SendOutlined } from "@ant-design/icons-vue";
 import { ref } from "vue";
 import { RouterLink } from "vue-router";

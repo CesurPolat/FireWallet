@@ -1,5 +1,5 @@
 <script>
-import NetworksView from "./NetworksView.vue";
+import NetworksView from "../components/NetworksView.vue";
 
 export default {
   data: function () {
