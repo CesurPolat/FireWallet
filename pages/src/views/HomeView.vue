@@ -1,10 +1,10 @@
 <script>
 import { ethers } from "ethers";
 import NetworksView from "../components/NetworksView.vue";
+import NFTs from "../components/NFTs.vue";
 import { SendOutlined } from "@ant-design/icons-vue";
 import { ref } from "vue";
 import { RouterLink } from "vue-router";
-import { getGateways} from 'ipfschecker';
 const activeKey = ref("1");
 
 export default {
@@ -59,8 +59,6 @@ export default {
       );
     },
   },
-  filters: {},
-  computed: function () {},
   mounted: async function () {
     this.currency = this.getEth2Currency();
     this.accounts = this.getAccounts();
@@ -70,7 +68,7 @@ export default {
       this.currency = this.getEth2Currency();
     }, 10000);
   },
-  components: { NetworksView, SendOutlined, RouterLink },
+  components: { NetworksView, SendOutlined, RouterLink,NFTs },
 };
 </script>
 
@@ -202,7 +200,7 @@ export default {
 
       <a-tabs v-model:activeKey="activeKey" centered>
         <a-tab-pane key="1" tab="History" force-render> History </a-tab-pane>
-        <a-tab-pane key="2" tab="NFTs"> NFT </a-tab-pane>
+        <a-tab-pane key="2" tab="NFTs"> <NFTs></NFTs> </a-tab-pane>
       </a-tabs>
 
       <!-- Bottom -->
